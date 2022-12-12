@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:sky_ui_kit/shimmer/shimmer_list.dart';
 import 'package:sky_ui_kit/list_pagination/empty_error/list_empty_view.dart';
 import 'package:sky_ui_kit/list_pagination/empty_error/pagination_error_load_view.dart';
 import 'package:sky_ui_kit/list_pagination/empty_error/pagination_error_view.dart';
+import 'package:sky_ui_kit/shimmer/shimmer_list.dart';
 
 import 'empty_error/pagination_max_item_view.dart';
 

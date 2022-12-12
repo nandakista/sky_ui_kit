@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sky_ui_kit/platform_loading_indicator.dart';
 import 'package:sky_ui_kit/media/preview/media_preview_page.dart';
+import 'package:sky_ui_kit/platform_loading_indicator.dart';
 
 /* Created by
    Varcant

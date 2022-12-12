@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:sky_ui_kit/media/sky_image.dart';
 import 'package:sky_ui_kit/media/preview/media_list_preview_page.dart';
 import 'package:sky_ui_kit/media/preview/media_preview_page.dart';
+import 'package:sky_ui_kit/media/sky_image.dart';
 import 'package:sky_ui_kit/media/sky_video.dart';
 
 import 'helper/media_helper.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sky_ui_kit/shimmer/shimmer_list.dart';
-import 'package:sky_ui_kit/list_pagination/empty_error/list_empty_view.dart';
 import 'package:sky_ui_kit/list_pagination/empty_error/error_view.dart';
+import 'package:sky_ui_kit/list_pagination/empty_error/list_empty_view.dart';
+import 'package:sky_ui_kit/shimmer/shimmer_list.dart';
 
 /* Created by
    Varcant
