@@ -83,9 +83,12 @@ class _PickerListViewState<T> extends State<PickerListView<T>> {
             widget.onChanged(
               context,
               index,
-              tempData.firstWhereOrNull((element) => element.isSelected)?.data,
               tempData
-                  .where((element) => element.isSelected)
+                  .firstWhereOrNull(
+                      (element) => element.isSelected && element.isAvailable)
+                  ?.data,
+              tempData
+                  .where((element) => element.isSelected && element.isAvailable)
                   .map((e) => e.data)
                   .toList(),
             );
@@ -99,7 +102,8 @@ class _PickerListViewState<T> extends State<PickerListView<T>> {
 
   void _setInitial() {
     if (widget.initialValue != null) {
-      int index = widget.data.indexOf(widget.initialValue!);
+      int index = widget.data
+          .indexWhere((element) => element.data == widget.initialValue?.data);
       widget.data[index] = PickerData(
         isSelected: true,
         index: widget.initialValue?.index,

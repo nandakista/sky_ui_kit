@@ -8,3 +8,29 @@ extension ListExt<T> on List<T> {
   }
 }
 
+extension ListNullExtension<T> on List<T>? {
+  bool isNullOrEmpty() {
+    if (this == null) {
+      return true;
+    } else {
+      if (this!.isEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  T? firstOrNull() {
+    if (this != null) {
+      if (this!.isNotEmpty) {
+        return this![0];
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
+}
+
+

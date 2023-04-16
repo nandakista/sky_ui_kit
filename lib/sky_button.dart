@@ -98,7 +98,9 @@ class SkyButton extends StatelessWidget {
           child: iconWidget ??
               Icon(
                 icon,
-                color: (outlineMode) ? color ?? Theme.of(context).primaryColor : iconColor,
+                color: (outlineMode)
+                    ? color ?? Theme.of(context).primaryColor
+                    : iconColor,
               ),
         ),
         onPressed: onPressed,
@@ -126,10 +128,12 @@ class SkyButton extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.button?.copyWith(
-              fontSize: fontSize,
-              fontWeight: fontWeight,
-              color: outlineMode ? color ?? Theme.of(context).primaryColor : textColor,
-            ),
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
+                  color: outlineMode
+                      ? color ?? Theme.of(context).primaryColor
+                      : textColor,
+                ),
           ),
         ),
       ),

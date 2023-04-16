@@ -4,7 +4,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_ui_kit/media/play_overlay.dart';
 import 'package:sky_ui_kit/media/preview/media_preview_page.dart';
-import 'package:sky_ui_kit/sky_box.dart';
+import 'package:sky_ui_kit/platform_loading_indicator.dart';
 import 'package:video_player/video_player.dart';
 
 /* Created by
@@ -29,7 +29,7 @@ class SkyVideo extends StatefulWidget {
     this.showControls = true,
     this.onTapVideo,
     this.onRemoveVideo,
-    this.borderRadius = 0,
+    this.borderRadius = 8,
     this.enablePreview = false,
   }) : super(key: key);
 
@@ -60,9 +60,11 @@ class _SkyVideoState extends State<SkyVideo> {
       placeholder: SizedBox(
         height: widget.height,
         width: widget.width,
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: (widget.showControls)
+            ? const Center(
+                child: PlatformLoadingIndicator(),
+              )
+            : null,
       ),
       errorBuilder: (context, error) => SizedBox(
         height: widget.height,
@@ -77,54 +79,58 @@ class _SkyVideoState extends State<SkyVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SkyBox(
-          onPressed: widget.enablePreview
-              ? () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MediaPreviewPage(url: widget.url),
-                  ))
-              : widget.onTapVideo ?? () {},
-          // onPressed: widget.onTapVideo,
-          borderRadius: widget.borderRadius,
-          width: widget.width,
-          height: widget.height,
-          padding: const EdgeInsets.all(0),
-          child: PlayOverlay(
-            borderRadius: 0,
-            visible: !widget.showControls,
-            child: Chewie(
-              controller: chewieController,
-            ),
-          ),
-        ),
-        widget.onRemoveVideo != null
-            ? Positioned(
-                top: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: widget.onRemoveVideo,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(5),
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+    return Container(
+      color: (widget.showControls) ? Colors.black : null,
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: widget.onTapVideo ??
+                () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MediaPreviewPage(url: widget.url),
+                    )),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              child: SizedBox(
+                width: widget.width,
+                height: widget.height,
+                child: PlayOverlay(
+                  borderRadius: 0,
+                  visible: !widget.showControls,
+                  child: Chewie(
+                    controller: chewieController,
                   ),
                 ),
-              )
-            : const SizedBox.shrink(),
-      ],
+              ),
+            ),
+          ),
+          widget.onRemoveVideo != null
+              ? Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: widget.onRemoveVideo,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ],
+      ),
     );
   }
 

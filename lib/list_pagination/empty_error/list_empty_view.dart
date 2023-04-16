@@ -11,36 +11,55 @@ class ListEmptyView extends StatelessWidget {
     this.emptyTitle,
     this.emptySubtitle,
     this.isScrollable = true,
+    this.imageSize,
+    this.verticalSpacing = 24,
+    this.horizontalSpacing = 24,
+    this.titleStyle,
+    this.subtitleStyle,
   }) : super(key: key);
 
   final Widget? emptyImage;
   final String? emptyTitle;
   final String? emptySubtitle;
   final bool isScrollable;
+  final double? imageSize;
+  final double verticalSpacing;
+  final double horizontalSpacing;
+  final TextStyle? titleStyle;
+  final TextStyle? subtitleStyle;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.symmetric(
+          vertical: verticalSpacing,
+          horizontal: horizontalSpacing,
+        ),
         physics: (isScrollable)
             ? const NeverScrollableScrollPhysics()
             : const BouncingScrollPhysics(),
         child: Column(
           children: [
-            emptyImage ?? Image.asset('assets/images/img_empty.png'),
-            const SizedBox(height: 24),
+            emptyImage ??
+                Image.asset(
+                  'assets/images/img_empty.png',
+                  height: imageSize,
+                ),
+            SizedBox(height: verticalSpacing),
             Text(
               emptyTitle ?? 'Your list is empty!',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: titleStyle ?? Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: verticalSpacing / 6),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                emptySubtitle ?? 'Sorry, list data is empty. Maybe go back latter',
+                emptySubtitle ??
+                    'Sorry, list data is empty. Maybe go back latter',
                 textAlign: TextAlign.center,
+                style: subtitleStyle,
               ),
             ),
           ],

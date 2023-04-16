@@ -31,6 +31,8 @@ class SkyPaginationView<ItemType> extends StatelessWidget {
     this.emptyImage,
     this.emptyTitle,
     this.emptySubtitle,
+    this.errorTitle,
+    this.errorSubtitle,
   }) : super(key: key);
 
   final PagingController<int, ItemType> pagingController;
@@ -64,6 +66,10 @@ class SkyPaginationView<ItemType> extends StatelessWidget {
 
   final String? emptySubtitle;
 
+  final String? errorTitle;
+
+  final String? errorSubtitle;
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -86,7 +92,12 @@ class SkyPaginationView<ItemType> extends StatelessWidget {
           noMoreItemsIndicatorBuilder: (ctx) =>
               maxItemView ?? const PaginationMaxItemView(),
           newPageErrorIndicatorBuilder: (ctx) =>
-              errorLoadView ?? const PaginationErrorLoadView(),
+          errorLoadView ??
+              PaginationErrorLoadView(
+                title: errorTitle,
+                description: errorSubtitle,
+                pagingController: pagingController,
+              ),
           itemBuilder: itemBuilder,
         ),
       ),

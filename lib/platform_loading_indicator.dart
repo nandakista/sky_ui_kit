@@ -12,10 +12,10 @@ class PlatformLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return const Center(child: CircularProgressIndicator());
-    } else {
+    if (Platform.isIOS || Platform.isMacOS) {
       return const Center(child: CupertinoActivityIndicator(radius: 16));
+    } else {
+      return const Center(child: CircularProgressIndicator());
     }
   }
 }

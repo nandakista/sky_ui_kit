@@ -73,7 +73,7 @@ class _PickerGridViewState<T> extends State<PickerGridView<T>> {
               }
             }
             tempData = tempData.map(
-                  (otherChip) {
+              (otherChip) {
                 return item == otherChip
                     ? otherChip.copy(isSelected: isSelected)
                     : otherChip;
@@ -83,10 +83,11 @@ class _PickerGridViewState<T> extends State<PickerGridView<T>> {
               context,
               index,
               tempData
-                  .firstWhereOrNull((element) => element.isSelected)
+                  .firstWhereOrNull(
+                      (element) => element.isSelected && element.isAvailable)
                   ?.data,
               tempData
-                  .where((element) => element.isSelected)
+                  .where((element) => element.isSelected && element.isAvailable)
                   .map((e) => e.data)
                   .toList(),
             );
@@ -101,7 +102,8 @@ class _PickerGridViewState<T> extends State<PickerGridView<T>> {
 
   void _setInitial() {
     if (widget.initialValue != null) {
-      int index = widget.data.indexOf(widget.initialValue!);
+      int index = widget.data
+          .indexWhere((element) => element.data == widget.initialValue?.data);
       widget.data[index] = PickerData(
         isSelected: true,
         index: widget.initialValue?.index,

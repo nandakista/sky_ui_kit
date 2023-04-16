@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +11,62 @@ import 'package:sky_ui_kit/platform_loading_indicator.dart';
    nanda.kista@gmail.com
 */
 class SkyImage extends StatelessWidget {
+  final String? url;
+  final double? width;
+  final double? height;
+  final VoidCallback? onTapImage;
+  final VoidCallback? onRemoveImage;
+  final BorderRadiusGeometry? borderRadius;
+  final BoxFit fit;
+  final bool enablePreview;
+  final BoxFit? emptyOrNullFit;
+  final Widget? emptyOrNullView;
+  final String? emptyOrNullUrl;
+  final bool fromFile;
+
+  const SkyImage({
+    Key? key,
+    this.url,
+    this.width,
+    this.height,
+    this.onTapImage,
+    this.onRemoveImage,
+    this.borderRadius,
+    this.fit = BoxFit.fill,
+    this.enablePreview = false,
+    this.emptyOrNullFit,
+    this.emptyOrNullView,
+    this.emptyOrNullUrl,
+    this.fromFile = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (url != null && url != '' && url != 'null') {
+      return DisplayImage(
+        url: url.toString(),
+        width: width,
+        height: height,
+        fit: fit,
+        borderRadius: borderRadius,
+        enablePreview: enablePreview,
+        onTapImage: onTapImage,
+        onRemoveImage: onRemoveImage,
+        fromFile: fromFile,
+      );
+    } else {
+      return DisplayImage(
+        url: emptyOrNullUrl ?? 'assets/images/img_empty.png',
+        width: width,
+        height: height,
+        fit: emptyOrNullFit ?? BoxFit.contain,
+        borderRadius: borderRadius,
+      );
+    }
+  }
+}
+
+class DisplayImage extends StatelessWidget {
   final String url;
   final double? width;
   final double? height;
@@ -17,8 +75,9 @@ class SkyImage extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
   final BoxFit fit;
   final bool enablePreview;
+  final bool fromFile;
 
-  const SkyImage({
+  const DisplayImage({
     Key? key,
     required this.url,
     this.width,
@@ -28,6 +87,7 @@ class SkyImage extends StatelessWidget {
     this.borderRadius,
     this.fit = BoxFit.fill,
     this.enablePreview = false,
+    this.fromFile = false,
   }) : super(key: key);
 
   @override
@@ -45,13 +105,13 @@ class SkyImage extends StatelessWidget {
                       builder: (context) => MediaPreviewPage(url: url),
                     ),
                   )
-              : onTapImage ?? () {},
+              : onTapImage,
           child: isFromRemote
               ? ClipRRect(
                   borderRadius: borderRadius ?? BorderRadius.circular(0),
                   child: CachedNetworkImage(
                     imageUrl: url,
-                    fit: BoxFit.cover,
+                    fit: fit,
                     imageBuilder: (context, imageProvider) => Container(
                       height: height,
                       width: width,
@@ -84,15 +144,27 @@ class SkyImage extends StatelessWidget {
                       width: width,
                       height: height,
                     )
-                  : ClipRRect(
-                      borderRadius: borderRadius ?? BorderRadius.circular(0),
-                      child: Image.asset(
-                        url,
-                        width: width,
-                        height: height,
-                        fit: fit,
-                      ),
-                    ),
+                  : (fromFile)
+                      ? ClipRRect(
+                          borderRadius:
+                              borderRadius ?? BorderRadius.circular(0),
+                          child: Image.file(
+                            File(url),
+                            width: width,
+                            height: height,
+                            fit: fit,
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius:
+                              borderRadius ?? BorderRadius.circular(0),
+                          child: Image.asset(
+                            url,
+                            width: width,
+                            height: height,
+                            fit: fit,
+                          ),
+                        ),
         ),
         onRemoveImage != null
             ? Positioned(
