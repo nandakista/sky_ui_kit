@@ -45,7 +45,7 @@ class OrderedList extends StatelessWidget {
           itemBuilder: (context, index) {
             return NumberTile(
               number: index + 1,
-              numberStyle: Theme.of(context).textTheme.bodyText1,
+              numberStyle: numberStyle ?? Theme.of(context).textTheme.bodyText1,
               horizontalSpacing: spacing,
               margin: itemMargin,
               padding: itemPadding ?? EdgeInsets.zero,

@@ -15,12 +15,15 @@ class SkyIconButton extends StatelessWidget {
   final Color? borderColor;
 
   /// Action or function that called when button pressed.
-  final VoidCallback? onPressed;
+  final VoidCallback? onTap;
 
-  /// Width shape of button, default value is 70
+  /// Size of icon, and set as default height & width
+  final double size;
+
+  /// Width shape of button, default value is equal to size
   final double? height;
 
-  /// Width shape of button, default value is match parent.
+  /// Width shape of button, default value is equal to size
   final double? width;
 
   /// The radius of the button shape.
@@ -41,13 +44,15 @@ class SkyIconButton extends StatelessWidget {
 
   final EdgeInsetsGeometry? padding;
 
+  final double elevation;
+
   const SkyIconButton({
     Key? key,
     this.color,
     this.iconColor = Colors.white,
-    this.onPressed,
-    this.height = 24,
-    this.width = 24,
+    this.onTap,
+    this.height,
+    this.width,
     this.borderRadius,
     this.icon,
     this.iconWidget,
@@ -56,41 +61,44 @@ class SkyIconButton extends StatelessWidget {
     this.padding,
     this.borderColor,
     this.borderWidth,
+    this.size = 24,
+    this.elevation = 0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width,
-      margin: margin,
-      padding: padding,
-      decoration: BoxDecoration(
-        color: (outlineMode)
-            ? Theme.of(context).scaffoldBackgroundColor
-            : (color ?? Theme.of(context).primaryColor),
-        borderRadius: BorderRadius.circular(borderRadius ?? 8),
-        border: Border.all(
+    return Material(
+      color: Colors.transparent,
+      elevation: elevation,
+      child: Container(
+        height: height ?? size,
+        width: width ?? size,
+        margin: margin,
+        padding: padding,
+        decoration: BoxDecoration(
           color: (outlineMode)
-              ? Theme.of(context).primaryColor
-              : borderColor ?? Colors.transparent,
-          width: borderWidth ?? 1.5,
-          style: BorderStyle.solid,
+              ? Theme.of(context).scaffoldBackgroundColor
+              : (color ?? Theme.of(context).primaryColor),
+          borderRadius: BorderRadius.circular(borderRadius ?? 8),
+          border: Border.all(
+            color: (outlineMode)
+                ? Theme.of(context).primaryColor
+                : borderColor ?? Colors.transparent,
+            width: borderWidth ?? 1.5,
+            style: BorderStyle.solid,
+          ),
         ),
-      ),
-      child: Material(
-        color: Colors.transparent,
         child: InkWell(
           customBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius ?? 8),
           ),
-          onTap: onPressed,
+          onTap: onTap,
           child: iconWidget ??
               Icon(
                 icon,
                 color:
                     (outlineMode) ? Theme.of(context).primaryColor : iconColor,
-                size: 18,
+                size: size,
               ),
         ),
       ),

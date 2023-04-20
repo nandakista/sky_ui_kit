@@ -7,21 +7,28 @@ import 'package:flutter/material.dart';
 class BulletText extends StatelessWidget {
   const BulletText({
     Key? key,
-    required this.title,
-    this.subtitle,
+    required this.child,
+    this.secondChild,
     this.horizontalSpacing = 8,
     this.verticalSpacing = 4,
     this.margin,
     this.padding,
-    this.caption,
+    this.thirdChild,
   }) : super(key: key);
 
-  final Widget title;
-  final Widget? subtitle;
-  final Widget? caption;
+  /// Content that one row with bullet icon
+  final Widget child;
+
+  /// Additional idget below the [child]
+  final Widget? secondChild;
+
+  /// Additional widget below [secondChild]
+  final Widget? thirdChild;
+
   final double horizontalSpacing;
   final double verticalSpacing;
-  final EdgeInsetsGeometry? margin, padding;
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +42,7 @@ class BulletText extends StatelessWidget {
             children: [
               const Icon(Icons.circle, size: 8),
               SizedBox(width: horizontalSpacing),
-              title,
+              child,
             ],
           ),
           SizedBox(height: verticalSpacing),
@@ -43,14 +50,14 @@ class BulletText extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: 8 + (horizontalSpacing),
             ),
-            child: subtitle,
+            child: secondChild,
           ),
           SizedBox(height: verticalSpacing / 2),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 8 + (horizontalSpacing),
             ),
-            child: caption,
+            child: thirdChild,
           )
         ],
       ),

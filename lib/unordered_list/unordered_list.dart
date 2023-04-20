@@ -36,19 +36,11 @@ class UnorderedList extends StatelessWidget {
       }
       children.add(
         BulletText(
-          title: Text(
-            item.key,
-            style: titleStyle ??
-                Theme.of(context)
-                    .textTheme
-                    .headline4
-                    ?.copyWith(fontWeight: FontWeight.w400),
-          ),
-          subtitle: Text(
+          secondChild: Text(
             item.value,
             style: subtitleStyle ?? Theme.of(context).textTheme.bodyText2,
           ),
-          caption: (caption != null)
+          thirdChild: (caption != null)
               ? Text(
                   caption.toString(),
                   style: captionStyle ??
@@ -57,6 +49,14 @@ class UnorderedList extends StatelessWidget {
                           ),
                 )
               : const SizedBox.shrink(),
+          child: Text(
+            item.key,
+            style: titleStyle ??
+                Theme.of(context)
+                    .textTheme
+                    .headline4
+                    ?.copyWith(fontWeight: FontWeight.w400),
+          ),
         ),
       );
     }

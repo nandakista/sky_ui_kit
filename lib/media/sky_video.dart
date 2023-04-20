@@ -12,7 +12,7 @@ import 'package:video_player/video_player.dart';
    nanda.kista@gmail.com
 */
 class SkyVideo extends StatefulWidget {
-  final String url;
+  final String src;
   final double? width;
   final double? height;
   final bool showControls;
@@ -23,7 +23,7 @@ class SkyVideo extends StatefulWidget {
 
   const SkyVideo({
     Key? key,
-    required this.url,
+    required this.src,
     this.width,
     this.height,
     this.showControls = true,
@@ -43,11 +43,11 @@ class _SkyVideoState extends State<SkyVideo> {
 
   @override
   void initState() {
-    final isFromRemote = widget.url.startsWith('http');
+    final isFromRemote = widget.src.startsWith('http');
 
     videoController = isFromRemote
-        ? VideoPlayerController.network(widget.url)
-        : VideoPlayerController.file(File(widget.url));
+        ? VideoPlayerController.network(widget.src)
+        : VideoPlayerController.file(File(widget.src));
 
     videoController.initialize();
 
@@ -88,7 +88,7 @@ class _SkyVideoState extends State<SkyVideo> {
                 () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MediaPreviewPage(url: widget.url),
+                      builder: (context) => MediaPreviewPage(url: widget.src),
                     )),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(widget.borderRadius),

@@ -4,20 +4,23 @@ import 'package:sky_ui_kit/colored_status_bar.dart';
 import 'package:sky_ui_kit/media/helper/media_helper.dart';
 import 'package:sky_ui_kit/media/sky_image.dart';
 import 'package:sky_ui_kit/media/sky_video.dart';
-import 'package:sky_ui_kit/picker/list_extension.dart';
+import 'package:sky_ui_kit/media/preview/list_extension.dart';
 
 class ImageCarouselDisplay extends StatelessWidget {
   const ImageCarouselDisplay({
     Key? key,
     required this.url,
+    this.title,
     this.initialIndex,
     this.heightBottomWidget,
     this.bottomWidget,
     this.bgColorBottomWidget,
     this.statusBarColor = Colors.black,
     this.statusBarBrightness = Brightness.dark,
+    this.fit,
   }) : super(key: key);
 
+  final String? title;
   final int? initialIndex;
   final List<String> url;
   final double? heightBottomWidget;
@@ -25,6 +28,7 @@ class ImageCarouselDisplay extends StatelessWidget {
   final Color? bgColorBottomWidget;
   final Color statusBarColor;
   final Brightness statusBarBrightness;
+  final BoxFit? fit;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +37,7 @@ class ImageCarouselDisplay extends StatelessWidget {
       brightness: statusBarBrightness,
       child: Scaffold(
         appBar: AppBar(
+          title: Text(title ?? ''),
           backgroundColor: Colors.black,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
@@ -54,7 +59,7 @@ class ImageCarouselDisplay extends StatelessWidget {
                   items: url.isNullOrEmpty()
                       ? [
                           const SkyImage(
-                            url: 'assets/images/img_empty.png',
+                            src: 'assets/images/img_empty.png',
                             width: double.infinity,
                             height: double.infinity,
                             enablePreview: true,
@@ -63,7 +68,7 @@ class ImageCarouselDisplay extends StatelessWidget {
                         ]
                       : url.map(
                           (item) {
-                            return Center(child: _determineMedia(item));
+                            return Center(child: _determineMedia(item, fit));
                           },
                         ).toList(),
                 ),
@@ -83,16 +88,19 @@ class ImageCarouselDisplay extends StatelessWidget {
     );
   }
 
-  Widget _determineMedia(String path) {
+  Widget _determineMedia(String path, BoxFit? fit) {
     final mediaType = MediaHelper.getMediaType(path);
     switch (mediaType.type) {
       case MediaType.file:
         return const Center(child: Text('Media Unsupported'));
       case MediaType.image:
-        return SkyImage(url: mediaType.path);
+        return SkyImage(
+          src: mediaType.path,
+          fit: fit ?? BoxFit.contain,
+        );
       case MediaType.video:
         return SkyVideo(
-          url: mediaType.path,
+          src: mediaType.path,
           height: double.infinity,
           width: double.infinity,
         );

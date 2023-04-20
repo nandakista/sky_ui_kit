@@ -2,7 +2,7 @@ import 'package:path/path.dart' as p;
 
 class MediaHelper {
   String tag = 'MediaHelper :';
-  static const imageExtensions = ["png", "jpg", "jpeg", "gif", "webp"];
+  static const imageExtensions = ["png", "jpg", "jpeg", "gif", "webp", "svg"];
   static const videoExtensions = ["mp4", "mov", "mkv", "avi"];
   static const fileExtensions = [
     "pdf",

@@ -11,22 +11,46 @@ import 'package:sky_ui_kit/platform_loading_indicator.dart';
    nanda.kista@gmail.com
 */
 class SkyImage extends StatelessWidget {
-  final String? url;
+  final String src;
   final double? width;
   final double? height;
+
+  /// Handling onTap image and more priority than enablePreview.
   final VoidCallback? onTapImage;
+
+  /// Show the icon close in top-right and handling OnTap Function
   final VoidCallback? onRemoveImage;
+
   final BorderRadiusGeometry? borderRadius;
+
+  /// BoxFit for your image
   final BoxFit fit;
+
+  /// Enabling preview your image to new page
   final bool enablePreview;
+
+  /// BoxFit for your empty view
   final BoxFit? emptyOrNullFit;
+
+  /// Set custom empty view when src is empty or null
   final Widget? emptyOrNullView;
-  final String? emptyOrNullUrl;
+
+  /// Set empty image with src url when origin src is empty or null
+  final String? emptyOrNullSrc;
+
+  /// Set true if source from local path
   final bool fromFile;
+
+  /// Change color for svg
+  final Color? color;
+
+  final String? previewTitle;
+
+  final TextStyle? previewTitleStyle;
 
   const SkyImage({
     Key? key,
-    this.url,
+    required this.src,
     this.width,
     this.height,
     this.onTapImage,
@@ -36,15 +60,18 @@ class SkyImage extends StatelessWidget {
     this.enablePreview = false,
     this.emptyOrNullFit,
     this.emptyOrNullView,
-    this.emptyOrNullUrl,
+    this.emptyOrNullSrc,
     this.fromFile = false,
+    this.color,
+    this.previewTitle,
+    this.previewTitleStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (url != null && url != '' && url != 'null') {
+    if (src != '' && src != 'null') {
       return DisplayImage(
-        url: url.toString(),
+        url: src.toString(),
         width: width,
         height: height,
         fit: fit,
@@ -53,14 +80,20 @@ class SkyImage extends StatelessWidget {
         onTapImage: onTapImage,
         onRemoveImage: onRemoveImage,
         fromFile: fromFile,
+        color: color,
+        previewTitle: previewTitle,
+        previewTitleStyle: previewTitleStyle,
       );
     } else {
       return DisplayImage(
-        url: emptyOrNullUrl ?? 'assets/images/img_empty.png',
+        url: emptyOrNullSrc ?? 'assets/img_empty.png',
         width: width,
         height: height,
         fit: emptyOrNullFit ?? BoxFit.contain,
         borderRadius: borderRadius,
+        color: color,
+        previewTitle: previewTitle,
+        previewTitleStyle: previewTitleStyle,
       );
     }
   }
@@ -74,8 +107,11 @@ class DisplayImage extends StatelessWidget {
   final VoidCallback? onRemoveImage;
   final BorderRadiusGeometry? borderRadius;
   final BoxFit fit;
-  final bool enablePreview;
   final bool fromFile;
+  final Color? color;
+  final bool enablePreview;
+  final String? previewTitle;
+  final TextStyle? previewTitleStyle;
 
   const DisplayImage({
     Key? key,
@@ -88,6 +124,9 @@ class DisplayImage extends StatelessWidget {
     this.fit = BoxFit.fill,
     this.enablePreview = false,
     this.fromFile = false,
+    this.color,
+    this.previewTitle,
+    this.previewTitleStyle,
   }) : super(key: key);
 
   @override
@@ -102,7 +141,11 @@ class DisplayImage extends StatelessWidget {
               ? () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MediaPreviewPage(url: url),
+                      builder: (context) => MediaPreviewPage(
+                        url: url,
+                        title: previewTitle,
+                        titleStyle: previewTitleStyle,
+                      ),
                     ),
                   )
               : onTapImage,
@@ -111,17 +154,9 @@ class DisplayImage extends StatelessWidget {
                   borderRadius: borderRadius ?? BorderRadius.circular(0),
                   child: CachedNetworkImage(
                     imageUrl: url,
+                    height: height,
+                    width: width,
                     fit: fit,
-                    imageBuilder: (context, imageProvider) => Container(
-                      height: height,
-                      width: width,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: fit,
-                        ),
-                      ),
-                    ),
                     placeholder: (context, url) => SizedBox(
                       height: height,
                       width: width,
@@ -143,6 +178,7 @@ class DisplayImage extends StatelessWidget {
                       url,
                       width: width,
                       height: height,
+                      color: color,
                     )
                   : (fromFile)
                       ? ClipRRect(

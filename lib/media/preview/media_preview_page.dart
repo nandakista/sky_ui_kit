@@ -8,9 +8,16 @@ import 'package:sky_ui_kit/media/sky_video.dart';
    nanda.kista@gmail.com
 */
 class MediaPreviewPage extends StatelessWidget {
-  final String url;
+  const MediaPreviewPage({
+    Key? key,
+    required this.url,
+    this.title,
+    this.titleStyle,
+  }) : super(key: key);
 
-  const MediaPreviewPage({Key? key, required this.url}) : super(key: key);
+  final String url;
+  final String? title;
+  final TextStyle? titleStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +25,9 @@ class MediaPreviewPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          'Media Preview',
-          style: TextStyle(fontSize: 16, color: Theme.of(context).primaryColor),
+          title ?? 'Media Preview',
+          style: titleStyle ??
+              TextStyle(fontSize: 16, color: Theme.of(context).primaryColor),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
@@ -35,10 +43,10 @@ class MediaPreviewPage extends StatelessWidget {
       case MediaType.file:
         return const Center(child: Text('Media Unsupported'));
       case MediaType.image:
-        return Center(child: SkyImage(url: mediaType.path));
+        return Center(child: SkyImage(src: mediaType.path));
       case MediaType.video:
         return SkyVideo(
-          url: mediaType.path,
+          src: mediaType.path,
           height: double.infinity,
           width: double.infinity,
         );

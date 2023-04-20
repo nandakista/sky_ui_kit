@@ -8,14 +8,18 @@ import 'package:flutter/material.dart';
    nanda.kista@gmail.com
 */
 class PlatformLoadingIndicator extends StatelessWidget {
-  const PlatformLoadingIndicator({Key? key}) : super(key: key);
+  const PlatformLoadingIndicator({Key? key, this.color}) : super(key: key);
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS || Platform.isMacOS) {
-      return const Center(child: CupertinoActivityIndicator(radius: 16));
+      return Center(
+        child: CupertinoActivityIndicator(radius: 16, color: color),
+      );
     } else {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: color));
     }
   }
 }

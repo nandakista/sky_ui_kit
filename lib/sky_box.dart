@@ -22,7 +22,7 @@ class SkyBox extends StatelessWidget {
 
   final Widget? child;
   final EdgeInsetsGeometry? margin, padding;
-  final double? borderRadius;
+  final BorderRadiusGeometry? borderRadius;
   final double? width;
   final double? height;
   final VoidCallback? onPressed;
@@ -36,7 +36,7 @@ class SkyBox extends StatelessWidget {
     return Card(
       margin: margin,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius ?? 12),
+        borderRadius: borderRadius ?? BorderRadius.circular(12),
       ),
       elevation: elevation,
       child: InkWell(
@@ -50,7 +50,7 @@ class SkyBox extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             gradient: gradient,
-            borderRadius: BorderRadius.circular(borderRadius ?? 12),
+            borderRadius: borderRadius ?? BorderRadius.circular(12),
             border: Border.all(
               color: borderColor ?? Colors.grey.shade300,
             ),

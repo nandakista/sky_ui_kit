@@ -9,23 +9,30 @@ import 'package:sky_ui_kit/media/sky_video.dart';
    nanda.kista@gmail.com
 */
 class MediaListPreviewPage extends StatelessWidget {
-  const MediaListPreviewPage({Key? key, required this.mediaUrls})
-      : super(key: key);
+  const MediaListPreviewPage({
+    Key? key,
+    required this.mediaUrls,
+    this.title,
+    this.fit,
+  }) : super(key: key);
+
   final List<String> mediaUrls;
+  final String? title;
+  final BoxFit? fit;
 
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [];
 
     for (var item in mediaUrls) {
-      children.add(_determineMedia(context, item));
+      children.add(_determineMedia(context, item, fit));
       children.add(const Divider());
     }
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          'Media Preview',
+          title ?? 'Media Preview',
           style: TextStyle(fontSize: 16, color: Theme.of(context).primaryColor),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -41,16 +48,19 @@ class MediaListPreviewPage extends StatelessWidget {
     );
   }
 
-  Widget _determineMedia(BuildContext context, String path) {
+  Widget _determineMedia(BuildContext context, String path, BoxFit? fit) {
     final mediaType = MediaHelper.getMediaType(path);
     switch (mediaType.type) {
       case MediaType.file:
         return const Center(child: Text('Media Unsupported'));
       case MediaType.image:
-        return SkyImage(url: mediaType.path);
+        return SkyImage(
+          src: mediaType.path,
+          fit: fit ?? BoxFit.contain,
+        );
       case MediaType.video:
         return SkyVideo(
-          url: mediaType.path,
+          src: mediaType.path,
           height: 400,
           showControls: false,
           onTapVideo: () => Navigator.push(

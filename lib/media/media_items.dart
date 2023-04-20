@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:sky_ui_kit/media/preview/media_list_preview_page.dart';
-import 'package:sky_ui_kit/media/preview/media_preview_page.dart';
+import 'package:sky_ui_kit/media/helper/media_helper.dart';
+import 'package:sky_ui_kit/media/preview/image_carousel_display.dart';
 import 'package:sky_ui_kit/media/sky_image.dart';
 import 'package:sky_ui_kit/media/sky_video.dart';
 
-import 'helper/media_helper.dart';
+import 'preview/media_list_preview_page.dart';
 
 /* Created by
    Varcant
@@ -14,7 +14,7 @@ import 'helper/media_helper.dart';
 */
 class MediaItems extends StatelessWidget {
   final VoidCallback? onTapMore;
-  final VoidCallback? onTap;
+  final void Function(int)? onTap;
   final List<String> mediaUrls;
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
@@ -22,6 +22,12 @@ class MediaItems extends StatelessWidget {
   final bool isGrid;
   final double size;
   final double itemsSpacing;
+  final String? moreText;
+  final double borderRadius;
+  final String? previewTitle;
+  final bool isSwipePreview;
+  final Widget? previewSwipeBottomWidget;
+  final BoxFit? previewFit;
 
   const MediaItems({
     Key? key,
@@ -34,6 +40,12 @@ class MediaItems extends StatelessWidget {
     this.size = 64.0,
     this.maxItem = 4,
     this.itemsSpacing = 5,
+    this.moreText,
+    this.borderRadius = 8,
+    this.previewTitle,
+    this.isSwipePreview = false,
+    this.previewSwipeBottomWidget,
+    this.previewFit,
   }) : super(key: key);
 
   @override
@@ -54,35 +66,46 @@ class MediaItems extends StatelessWidget {
         items.add(
           GestureDetector(
             onTap: onTapMore ??
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MediaListPreviewPage(mediaUrls: mediaUrls),
-                    ),
-                  );
-                },
+                ((isSwipePreview)
+                    ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageCarouselDisplay(
+                              title: previewTitle,
+                              initialIndex: maxItem - 1,
+                              url: mediaUrls,
+                              bottomWidget: previewSwipeBottomWidget,
+                              fit: previewFit,
+                            ),
+                          ),
+                        )
+                    : () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MediaListPreviewPage(
+                              mediaUrls: mediaUrls,
+                              title: previewTitle,
+                              fit: previewFit,
+                            ),
+                          ),
+                        )),
             child: SizedBox(
               width: itemSize,
               height: itemSize,
               child: _MoreItem(
-                text: "+ ${mediaUrls.length - maxItem}",
+                text: moreText ?? "+ ${mediaUrls.length - maxItem}",
                 isGrid: isGrid,
-                child: _determineMedia(context, mediaUrls[i]),
+                child: _determineMedia(context, i),
               ),
             ),
           ),
         );
       } else {
         items.add(
-          GestureDetector(
-            onTap: onTap,
-            child: SizedBox(
-              width: itemSize,
-              height: itemSize,
-              child: _determineMedia(context, mediaUrls[i]),
-            ),
+          SizedBox(
+            width: itemSize,
+            height: itemSize,
+            child: _determineMedia(context, i),
           ),
         );
       }
@@ -97,7 +120,7 @@ class MediaItems extends StatelessWidget {
                 width: containerSize,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(borderRadius),
                 ),
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -116,40 +139,41 @@ class MediaItems extends StatelessWidget {
           );
   }
 
-  Widget _determineMedia(BuildContext context, String path) {
-    final mediaType = MediaHelper.getMediaType(path);
+  Widget _determineMedia(BuildContext context, int index) {
+    final mediaType = MediaHelper.getMediaType(mediaUrls[index]);
     switch (mediaType.type) {
       case MediaType.file:
         return const Center(child: Text('Media Unsupported'));
       case MediaType.image:
         return SkyImage(
-          url: mediaType.path,
+          src: mediaType.path,
           width: double.infinity,
           height: double.infinity,
-          borderRadius: BorderRadius.circular((isGrid) ? 0 : 8),
-          onTapImage: onTap ??
-              () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MediaPreviewPage(url: mediaType.path),
-                    ),
-                  ),
+          borderRadius: BorderRadius.circular((isGrid) ? 0 : borderRadius),
+          onTapImage: (onTap != null)
+              ? () => onTap!(index)
+              : (isSwipePreview)
+                  ? () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageCarouselDisplay(
+                            title: previewTitle,
+                            initialIndex: index,
+                            url: mediaUrls,
+                            bottomWidget: previewSwipeBottomWidget,
+                            fit: previewFit,
+                          ),
+                        ),
+                      )
+                  : null,
         );
       case MediaType.video:
         return SkyVideo(
-          url: mediaType.path,
+          src: mediaType.path,
+          enablePreview: true,
           showControls: false,
-          height: double.infinity,
-          width: double.infinity,
-          onTapVideo: onTapMore ??
-              () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MediaPreviewPage(url: mediaType.path),
-                    ),
-                  ),
+          borderRadius: (isGrid) ? 0 : borderRadius,
+          onTapVideo: onTap != null ? () => onTap!(index) : null,
         );
       case MediaType.unknown:
         return const Center(child: Text('Media Unsupported'));
