@@ -1,6 +1,6 @@
 name: sky_ui_kit
 description: A package contains some common widget for faster development.
-version: 0.0.1+1
+version: 0.0.2
 repository: https://github.com/nandakista/sky_ui_kit
 
 environment:
